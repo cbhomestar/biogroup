@@ -16,6 +16,6 @@ print(genome[:50])
 mins = p.min_skew_points(genome)
 
 print(mins)
-subgenome = genome[mins[0] - 250: mins[0] + 250]
-result = j.faster_frequent_words(subgenome, 9, distance=1, with_revc=False)
+subgenome = genome[mins[0] - 500: mins[0] + 500]
+result = j.faster_frequent_words(subgenome, 9, distance=2, with_revc=True)
 print(result)
