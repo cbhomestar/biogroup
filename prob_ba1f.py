@@ -13,7 +13,8 @@ def min_skew_points(genome):
     min_skew = 0
     skew = 0
     for i, N in enumerate(genome):
-        assert N in 'ATGC'
+        if N not in 'ATGC':
+            print(N)
 
         if N == 'C':
             skew -= 1
