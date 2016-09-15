@@ -10,7 +10,7 @@ Our next task was to run our frequent words algorithm to find 9-mers with a hamm
 
 Later upon reviewing the textbook an another attempt was made, this time with a 500bp window *starting* at the minimum GC skew instead of surrounding it. This time the desired string *was* in the set of common 9-mers; however, it was a surprise to see that size of the resulting set was 34! However, after consulting the textbook again, we saw that this mirrored what the book indicated would happen.
 
-After some further data munging, which included removing reverse compliments from our results set and selecting only the matches that were exactly 1 hamming distance away, we found a set of 9-mers that matched very closely what was in the textbook. These 9-mers were     .
+After some further data munging, which included removing reverse compliments from our results set and selecting only the matches that were exactly 1 hamming distance away, we found a set of 9-mers that matched very closely what was in the textbook. These 9-mers were TCTGGATAA, TGTGAATAA, TGTGGATAA and their reverse compliments.
 
 ---
 ## DnaA boxes in mystery data
