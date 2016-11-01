@@ -2,9 +2,10 @@ class Organism(object):
 	def __init__(name, file):
 		self.name = name
 		self.file = file
+		self.ssrs = []
 
 	def addSSR(ssr):
-		pass
+		self.ssrs.append(ssr)
 
 	def getListOfSSRs():
-		pass
+		return self.ssrs
