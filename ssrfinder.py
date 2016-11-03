@@ -47,6 +47,38 @@ class SSR:
 		self.right50=right
 	def getRight50(self):
 		return self.right50
+	
+def calculatePossibleSSRs(myNum):
+	if not myNum.isdigit():
+		print "ERROR: You need to insert a digit for max kmer size"
+	myKmers=list()
+	nucleotides=('A','T','G','C')
+	for i in range(2,int(myNum)+1):
+		imers=list()
+		for j in range(i): #for each element
+			if len(imers)==0:
+				for n in nucleotides:
+					imers.append(n)
+			else:
+				newImers=list();
+				for myString in imers:
+					for n in nucleotides:
+						newImers.append(myString+n)
+				imers=newImers
+		for result in imers:
+			if len(result)%2==0:
+				if result[0:len(result)/2]!=result[len(result)/2:len(result)]:
+					myKmers.append(result)
+					print result
+			else:
+				ok=False
+				start=result[0]
+				for i in range(1,len(result)):
+					if result[i]!=start:
+						ok=True
+				if ok:
+					myKmers.append(result)
+	return myKmers
 
 
 for i in (range(1, len(sys.argv))):
