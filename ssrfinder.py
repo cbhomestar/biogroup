@@ -80,6 +80,35 @@ def calculatePossibleSSRs(myNum):
 					myKmers.append(result)
 	return myKmers
 
+def compareSeqs(s1, s2):
+	s1.upper()
+	s2.upper()
+	matrix = [[0 for x in range(len(s2) + 1)] for y in range(len(s1) + 1)]
+	gap = -1
+	mismatch = 0
+	match = 1
+	maxscore = 0
+	score1 = 0
+	score2 = 0
+	score3 = 0
+	for i in range(1, len(s1) + 1):
+		matrix[i][0] = gap + matrix[i - 1][0]
+	for j in range(1, len(s2) + 1):
+		matrix[0][j] = gap + matrix[0][j - 1]
+	for i in range(1, len(s1) + 1):
+		for j in range(1, len(s2) + 1):
+			if (s1[i - 1] == s2[j - 1]):
+				score1 = matrix[i - 1][j - 1] + match
+			else:
+				score1 = matrix[i - 1][j - 1] + mismatch
+			score2 = matrix[i][j - 1] + gap
+			score3 = matrix[i - 1][j] + gap
+			matrix[i][j] = max(score1, score2, score3)
+			if matrix[i][j] > maxscore:
+				maxscore = matrix[i][j]
+	if maxscore >= (.85 * min(len(s1), len(s2)):
+		return True
+	return False
 
 for i in (range(1, len(sys.argv))):
            with open(sys.argv[i]) as file:
