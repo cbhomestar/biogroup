@@ -1,4 +1,3 @@
-#Put your code here
 import sys
 
 class SSR:
