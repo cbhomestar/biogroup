@@ -1,5 +1,17 @@
 import sys
 
+class Organism(object):
+	def __init__(name, file):
+		self.name = name
+		self.file = file
+		self.ssrs = []
+
+	def addSSR(ssr):
+		self.ssrs.append(ssr)
+
+	def getListOfSSRs():
+		return self.ssrs
+
 class SSR:
 	pattern
 	repeatNum=0
@@ -109,22 +121,48 @@ def compareSeqs(s1, s2):
 		return True
 	return False
 
+def findSSRs(dna, ssr):
+	pattern = getPatternFromSSR(ssr)
+	matchIndices = [match.span() for match in re.finditer(pattern, dna)]
+	return matchIndices
+
+def getPatternFromSSR(ssr):
+	repeatNumber = {2: 8, 3: 6, 4: 5, 5: 4}
+	pattern = ssr * repeatNumber[len(ssr)]
+	return pattern
+			
+organismList = []
 for i in (range(1, len(sys.argv))):
            with open(sys.argv[i]) as file:
+		fileName = sys.argv[i]
+		name = fileName.split('.')[0]
+		organism = Organism(name, file)
                 sequences = {}
                 label = ""
                 sequence = ""
                 sequenceNumber = 0
                 for line in file:
-                  line = line.strip()
-                  if (line[0] == ">"):
-                    if (sequenceNumber > 0):
-                      sequences[label] = sequence
-                      label = line[1:]
-                      sequence = ""
-                      sequenceNumber += 1
-                    else:
-                      label = line[1:]
-                      sequenceNumber += 1
-                  else:
-                    sequence += line
+                	line = line.strip()
+                	if (line[0] == ">"):
+                		if (sequenceNumber > 0):
+                			sequences[label] = sequence
+                			label = line[1:]
+                			sequence = ""
+                 			sequenceNumber += 1
+                		else:
+                 			label = line[1:]
+                			sequenceNumber += 1
+			else:
+                		sequence += line
+		kmers = []
+		for j in range(2, 6):
+			kmers = calculatePossibleSSRs(j)
+			for kmer in kmers:
+				for label in sequences:
+					foundSSRS = findSSRs(sequences[label], kmer)
+					for index in foundSSRS:
+						newSSR = SSR(kmer)
+						newSSR.setContigName(label)
+						newSSR.setStartLocation(index)
+		organismList.append(organism)
+
