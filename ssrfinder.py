@@ -160,7 +160,7 @@ def reverseComplement(seq):
 			output += "N"
 	return output
 def notInContig(SSRindices, num):
-		for index in SSTindices:
+		for index in SSRindices:
 			if (index - 5 <= num and index + 5 >= num):
 				return False
 		return True
@@ -201,7 +201,7 @@ for i in (range(1, len(sys.argv))):
 				foundSSRS = findSSRs(sequence, kmer)
 				endLocation = -1000
 				for index in foundSSRS:
-					if (index[0] > endLocation and notInContig(SSRindices,index[0]):
+					if (index[0] > endLocation and notInContig(SSRindices,index[0])):
 						newSSR = SSR()
 						newSSR.setLabel(label)
 						newSSR.setPattern(kmer)
