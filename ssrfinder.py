@@ -288,5 +288,5 @@ if (len(organismList) > 2):
 						else:
 							outFile2.write(",X")
 				outFile2.write("\n")
-	outFile.close()
+	outFile2.close()
 
