@@ -269,7 +269,7 @@ if (len(organismList) > 2):
 				for l in range(len(childSSRs)):
 					ssrC = childSSRs[l]
 					if (ssr1.getPattern() == ssrC.getPattern() and compareSeqs(ssr1.getLeft50(), ssrC.getLeft50()) and compareSeqs(ssr1.getRight50(), ssrC.getRight50())):
-						outFile.write(organismList[k] + "," + ssrC.getLabel() + "," + str(ssrC.getNumber()) + ",p" + str(len(ssrC.getPattern())) + ",(" + ssrC.getPattern() + ")" + str(ssrC.getTotalSize() / len(ssrC.getPattern())) + "," + str(ssrC.getTotalSize()) + "," + str(ssrC.getStartLocation()) + "," + str(ssrC.getEndLocation()) + "," + ssrC.getLeft50() + "," + ssrC.getRight50() + '\n')
+						outFile.write(organismList[k].getName() + "," + ssrC.getLabel() + "," + str(ssrC.getNumber()) + ",p" + str(len(ssrC.getPattern())) + ",(" + ssrC.getPattern() + ")" + str(ssrC.getTotalSize() / len(ssrC.getPattern())) + "," + str(ssrC.getTotalSize()) + "," + str(ssrC.getStartLocation()) + "," + str(ssrC.getEndLocation()) + "," + ssrC.getLeft50() + "," + ssrC.getRight50() + '\n')
 	outFile.close()
 	outFile2 = open("HybridTables.csv","w")
 	outFile2.write("SSR")
