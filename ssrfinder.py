@@ -192,29 +192,32 @@ for i in (range(1, len(sys.argv))):
 				for label in sequences:
 					sequence = sequences[label]
 					foundSSRS = findSSRs(sequence, kmer)
+					endLocation = -1000
 					for index in foundSSRS:
-						newSSR = SSR()
-						newSSR.setLabel(label)
-						newSSR.setPattern(kmer)
-						newSSR.setNumber(ssrNumber)
-						ssrNumber += 1
-						newSSR.setContigName(label)
-						newSSR.setStartLocation(index[0])
-						k = 0
-						while sequence[(index[0] + k * len(kmer)): (index[0] + k * len(kmer) + len(kmer))] == kmer:
-							k += 1
-						newSSR.setRepeatNum(k)
-						newSSR.setEndLocation(index[0] + k * len(kmer) - 1)
-						newSSR.setTotalSize(k * len(kmer))
-						if (index[0] < 50):
-							newSSR.setLeft50(sequence[0:(index[0])])
-						else:
-							newSSR.setLeft50(sequence[(index[0] - 50): (index[0])])
-						if (newSSR.getEndLocation() + 50) > len(sequence):
-							newSSR.setRight50(sequence[newSSR.getEndLocation():])
-						else:
-							newSSR.setRight50(sequence[newSSR.getEndLocation():newSSR.getEndLocation() + 50]) 
-						organism.addSSR(newSSR)
+						if (index[0] > endLocation):
+							newSSR = SSR()
+							newSSR.setLabel(label)
+							newSSR.setPattern(kmer)
+							newSSR.setNumber(ssrNumber)
+							ssrNumber += 1
+							newSSR.setContigName(label)
+							newSSR.setStartLocation(index[0])
+							k = 0
+							while sequence[(index[0] + k * len(kmer)): (index[0] + k * len(kmer) + len(kmer))] == kmer:
+								k += 1
+							newSSR.setRepeatNum(k)
+							newSSR.setEndLocation(index[0] + k * len(kmer) - 1)
+							endLocation = newSSR.getEndLocation() + 1
+							newSSR.setTotalSize(k * len(kmer))
+							if (index[0] < 50):
+								newSSR.setLeft50(sequence[0:(index[0])])
+							else:
+								newSSR.setLeft50(sequence[(index[0] - 50): (index[0])])
+							if (newSSR.getEndLocation() + 50) > len(sequence):
+								newSSR.setRight50(sequence[newSSR.getEndLocation():])
+							else:
+								newSSR.setRight50(sequence[newSSR.getEndLocation():newSSR.getEndLocation() + 50]) 
+							organism.addSSR(newSSR)
 		organismList.append(organism)
 if (len(organismList) == 2):
 	outFile = open("output.csv", 'w')
