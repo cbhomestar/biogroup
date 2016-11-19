@@ -183,6 +183,7 @@ for i in (range(1, len(sys.argv))):
                 			sequenceNumber += 1
 			else:
                 		sequence += line
+		sequences[label]=sequence
 		kmers = []
 		ssrNumber = 1
 		for j in range(2, 6):
@@ -201,9 +202,9 @@ for i in (range(1, len(sys.argv))):
 						newSSR.setStartLocation(index[0])
 						k = 0
 						while sequence[(index[0] + k * len(kmer)): (index[0] + k * len(kmer) + len(kmer))] == kmer:
-							k += len(kmer)
+							k += 1
 						newSSR.setRepeatNum(k)
-						newSSR.setEndLocation(index[0] + k * len(kmer) + 1)
+						newSSR.setEndLocation(index[0] + k * len(kmer) - 1)
 						newSSR.setTotalSize(k * len(kmer))
 						if (index[0] < 50):
 							newSSR.setLeft50(sequence[0:(index[0])])
