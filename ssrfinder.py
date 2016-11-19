@@ -159,8 +159,14 @@ def reverseComplement(seq):
 		if letter == 'N':
 			output += "N"
 	return output
-			
+def notInContig(SSRindices, num):
+		for index in SSTindices:
+			if (index - 5 <= num and index + 5 >= num):
+				return False
+		return True
 organismList = []
+kmers=[]
+kmers = calculatePossibleSSRs(5)
 for i in (range(1, len(sys.argv))):
            with open(sys.argv[i]) as file:
 		fileName = sys.argv[i]
@@ -184,40 +190,48 @@ for i in (range(1, len(sys.argv))):
 			else:
                 		sequence += line
 		sequences[label]=sequence
-		kmers = []
+		#kmers = []
 		ssrNumber = 1
-		for j in range(2, 6):
-			kmers = calculatePossibleSSRs(j)
-			for kmer in kmers:
-				for label in sequences:
-					sequence = sequences[label]
-					foundSSRS = findSSRs(sequence, kmer)
-					endLocation = -1000
-					for index in foundSSRS:
-						if (index[0] > endLocation):
-							newSSR = SSR()
-							newSSR.setLabel(label)
-							newSSR.setPattern(kmer)
-							newSSR.setNumber(ssrNumber)
-							ssrNumber += 1
-							newSSR.setContigName(label)
-							newSSR.setStartLocation(index[0])
-							k = 0
-							while sequence[(index[0] + k * len(kmer)): (index[0] + k * len(kmer) + len(kmer))] == kmer:
-								k += 1
-							newSSR.setRepeatNum(k)
-							newSSR.setEndLocation(index[0] + k * len(kmer) - 1)
-							endLocation = newSSR.getEndLocation() + 1
-							newSSR.setTotalSize(k * len(kmer))
-							if (index[0] < 50):
-								newSSR.setLeft50(sequence[0:(index[0])])
-							else:
-								newSSR.setLeft50(sequence[(index[0] - 50): (index[0])])
-							if (newSSR.getEndLocation() + 50) > len(sequence):
-								newSSR.setRight50(sequence[newSSR.getEndLocation():])
-							else:
-								newSSR.setRight50(sequence[newSSR.getEndLocation():newSSR.getEndLocation() + 50]) 
-							organism.addSSR(newSSR)
+		#for j in range(2, 6):
+			#kmers = calculatePossibleSSRs(j)
+		for kmer in kmers:
+			for label in sequences:
+				SSRindices=[]
+				sequence = sequences[label]
+				foundSSRS = findSSRs(sequence, kmer)
+				endLocation = -1000
+				for index in foundSSRS:
+					if (index[0] > endLocation and notInContig(SSRindices,index[0]):
+						newSSR = SSR()
+						newSSR.setLabel(label)
+						newSSR.setPattern(kmer)
+						newSSR.setNumber(ssrNumber)
+						ssrNumber += 1
+						newSSR.setContigName(label)
+						newSSR.setStartLocation(index[0])
+						k = 0
+						while sequence[(index[0] + k * len(kmer)): (index[0] + k * len(kmer) + len(kmer))] == kmer:
+							k += 1
+						newSSR.setRepeatNum(k)
+						SSRindices.append(index[0])
+						newSSR.setEndLocation(index[0] + k * len(kmer) - 1)
+						endLocation = newSSR.getEndLocation() + 1
+						newSSR.setTotalSize(k * len(kmer))
+						if (index[0] < 50):
+							newSSR.setLeft50(sequence[0:(index[0])])
+						else:
+							newSSR.setLeft50(sequence[(index[0] - 50): (index[0])])
+						if (newSSR.getEndLocation() + 50) > len(sequence):
+							newSSR.setRight50(sequence[newSSR.getEndLocation():])
+						else:
+							newSSR.setRight50(sequence[newSSR.getEndLocation():newSSR.getEndLocation() + 50]) 
+						
+						#isItInAlready=false
+						#
+						#for z in range(
+						#	#stufff
+						#if isItInAlready==false:
+						organism.addSSR(newSSR)
 		organismList.append(organism)
 if (len(organismList) == 2):
 	outFile = open("output.csv", 'w')
