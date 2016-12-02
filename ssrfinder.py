@@ -194,12 +194,12 @@ for i in (range(1, len(sys.argv))):
 		ssrNumber = 1
 		#for j in range(2, 6):
 			#kmers = calculatePossibleSSRs(j)
-		for kmer in kmers:
-			for label in sequences:
+		for label in sequences:
+			endLocation = -1000
+			for kmer in kmers:
 				SSRindices=[]
 				sequence = sequences[label]
 				foundSSRS = findSSRs(sequence, kmer)
-				endLocation = -1000
 				for index in foundSSRS:
 					if (index[0] > endLocation and notInContig(SSRindices,index[0])):
 						newSSR = SSR()
