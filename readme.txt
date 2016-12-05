@@ -79,3 +79,6 @@ A: As of right now, no. The plan is to add that functionality in the future.
 
 Q: Why do you report the left and right 50 nucleotides?
 A: That is to help assist the researcher in finding the sequence, but more importantly for potential primer design.
+
+Q: How long does it take for your program to run?
+A: ssrfinder.py can take anywhere from 5 minutes up to a few hours.
