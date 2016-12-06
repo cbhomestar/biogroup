@@ -190,10 +190,7 @@ for i in (range(1, len(sys.argv))):
 			else:
                 		sequence += line
 		sequences[label]=sequence
-		#kmers = []
 		ssrNumber = 1
-		#for j in range(2, 6):
-			#kmers = calculatePossibleSSRs(j)
 		for label in sequences:
 			endLocation = -1000
 			for kmer in kmers:
@@ -224,13 +221,7 @@ for i in (range(1, len(sys.argv))):
 						if (newSSR.getEndLocation() + 50) > len(sequence):
 							newSSR.setRight50(sequence[newSSR.getEndLocation():])
 						else:
-							newSSR.setRight50(sequence[newSSR.getEndLocation():newSSR.getEndLocation() + 50]) 
-						
-						#isItInAlready=false
-						#
-						#for z in range(
-						#	#stufff
-						#if isItInAlready==false:
+							newSSR.setRight50(sequence[newSSR.getEndLocation():newSSR.getEndLocation() + 50])
 						organism.addSSR(newSSR)
 		organismList.append(organism)
 if (len(organismList) == 2):
@@ -279,7 +270,7 @@ if (len(organismList) > 2):
 					childSSRs = organismList[k].getListOfSSRs()
 					for l in range(len(childSSRs)):
 						ssrC = childSSRs[l]
-						if (ssr1.getPattern() == ssrC.getPattern() and compareSeqs(ssr1.getLeft50(), ssrC.getLeft50()) and compareSeqs(ssr1.getRight50(), ssrC.getRight50())):
+						if ((ssr1.getPattern() == ssrC.getPattern() or ssr1.getPattern() == reverseComplement(ssrC.getPattern())) and (compareSeqs(ssr1.getLeft50(), ssrC.getLeft50()) and compareSeqs(ssr1.getRight50(), ssrC.getRight50()) or compareSeqs(ssr1.getLeft50(), reverseComplement(ssrC.getRight50())) and compareSeqs(ssr1.getRight50(), reverseComplement(ssrC.getLeft50())))):
 							outFile.write(organismList[k].getName() + "," + ssrC.getLabel() + "," + str(insertNum) + ",p" + str(len(ssrC.getPattern())) + ",(" + ssrC.getPattern() + ")" + str(ssrC.getTotalSize() / len(ssrC.getPattern())) + "," + str(ssrC.getTotalSize()) + "," + str(ssrC.getStartLocation()) + "," + str(ssrC.getEndLocation()) + "," + ssrC.getLeft50() + "," + ssrC.getRight50() + '\n')
 				insertNum += 1
 	outFile.close()
