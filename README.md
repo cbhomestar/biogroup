@@ -33,7 +33,7 @@ The following is an explanation of the results generated:
 
 For two samples, a comma separated value (.csv) file called output.csv.
 It will have the following heading:
-Sample, Label, SSR #, SSR type, SSR, size, Start, End, Left 50, Right 50 
+Sample, Label, SSR #, SSR type, SSR, size, Start, End, Left 50, Right 50.
 Sample 1 corresponds to the first sample inputted, and Sample 2 to the second.
 The Label is the label of the contig for the SSR.
 SSR # is an individually generated running SSR #.
@@ -62,30 +62,30 @@ Thus given mapping parents, children can be genotyped.
 
 FAQ
 ---------------
-Q: What file formats are accepted?
+####Q: What file formats are accepted?
 
 A: ssrfinder.py accepts .fa and .fasta file formats. Fastq files are not accepted.
 
-Q: Will your program detect heterozygotes?
+####Q: Will your program detect heterozygotes?
 
 A: Yes, our program checks each SSR to see if a heterozygote is possible.
 
-Q: Do I have to assemble my sequences?
+####Q: Do I have to assemble my sequences?
 
 A: No, for best results, however, assembling sequence data is recommended.
 
-Q: Can I just compare two organism's SSRS?
+####Q: Can I just compare two organism's SSRS?
 
 A: Yes, the program will produce a table just for two samples when they are the only input.
 
-Q: Can I use this for phylogenetics?
+####Q: Can I use this for phylogenetics?
 
 A: As of right now, no. The plan is to add that functionality in the future.
 
-Q: Why do you report the left and right 50 nucleotides?
+####Q: Why do you report the left and right 50 nucleotides?
 
 A: That is to help assist the researcher in finding the sequence, but more importantly for potential primer design.
 
-Q: How long does it take for your program to run?
+####Q: How long does it take for your program to run?
 
 A: ssrfinder.py can take anywhere from 5 minutes up to a few hours.
