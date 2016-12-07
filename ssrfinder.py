@@ -29,7 +29,7 @@ class SSR:
 	number = 0
 	def _init_(self, pattern):
 		self.pattern=pattern
-		totalSize=len(pattern) #i dont know if this is right
+		totalSize=len(pattern)
 	def setPattern(self,pattern):
 		self.pattern=pattern
 	def getPattern(self):
@@ -78,7 +78,7 @@ def calculatePossibleSSRs(myNum):
 	nucleotides=('A','T','G','C')
 	for i in range(2,int(myNum)+1):
 		imers=list()
-		for j in range(i): #for each element
+		for j in range(i):
 			if len(imers)==0:
 				for n in nucleotides:
 					imers.append(n)
@@ -109,8 +109,8 @@ def compareSeqs(s1, s2):
 	s2.upper()
 	matrix = [[0 for x in range(len(s2) + 1)] for y in range(len(s1) + 1)]
 	gap = -1
-	mismatch = 0
-	match = 1
+	mismatch = -1
+	match = 2
 	maxscore = 0
 	score1 = 0
 	score2 = 0
@@ -130,7 +130,7 @@ def compareSeqs(s1, s2):
 			matrix[i][j] = max(score1, score2, score3)
 			if matrix[i][j] > maxscore:
 				maxscore = matrix[i][j]
-	if maxscore >= (.85 * min(len(s1), len(s2))):
+	if maxscore >= (1.4 * min(len(s1), len(s2))):
 		return True
 	return False
 
@@ -164,6 +164,7 @@ def notInContig(SSRindices, num):
 			if (index - 5 <= num and index + 5 >= num):
 				return False
 		return True
+
 organismList = []
 kmers=[]
 kmers = calculatePossibleSSRs(5)
@@ -221,7 +222,7 @@ for i in (range(1, len(sys.argv))):
 						if (newSSR.getEndLocation() + 50) > len(sequence):
 							newSSR.setRight50(sequence[newSSR.getEndLocation():])
 						else:
-							newSSR.setRight50(sequence[newSSR.getEndLocation():newSSR.getEndLocation() + 50])
+							newSSR.setRight50(sequence[newSSR.getEndLocation():newSSR.getEndLocation() + 50]) 
 						organism.addSSR(newSSR)
 		organismList.append(organism)
 if (len(organismList) == 2):
@@ -246,6 +247,11 @@ if (len(organismList) == 2):
 if (len(organismList) > 2):
 	outFile = open("comparisonOutput.csv", 'w')
 	outFile.write("Sample,Label,SSR #,SSR type,SSR,size,Start,End,Left 50,Right 50\n")
+	outFile2 = open("HybridTables.csv","w")
+	outFile2.write("SSR")
+	for i in range(len(organismList)):
+		outFile2.write("," + organismList[i].getName())
+	outFile2.write('\n')
 	ssrList1 = organismList[0].getListOfSSRs()
 	ssrList2 = organismList[1].getListOfSSRs()
 	insertNum = 1
@@ -256,46 +262,21 @@ if (len(organismList) > 2):
 			if (ssr1.getPattern() == ssr2.getPattern() and ssr1.getRepeatNum() != ssr2.getRepeatNum() and compareSeqs(ssr1.getLeft50(), ssr2.getLeft50()) and compareSeqs(ssr1.getRight50(), ssr2.getRight50())):
 				outFile.write("1," + ssr1.getLabel() + "," + str(insertNum) + ",p" + str(len(ssr1.getPattern())) + ",(" + ssr1.getPattern() + ")" + str(ssr1.getTotalSize() / len(ssr1.getPattern())) + "," + str(ssr1.getTotalSize()) + "," + str(ssr1.getStartLocation()) + "," + str(ssr1.getEndLocation()) + "," + ssr1.getLeft50() + "," + ssr1.getRight50() + '\n')
 				outFile.write("2," + ssr2.getLabel() + "," + str(insertNum) + ",p" + str(len(ssr2.getPattern())) + ",(" + ssr2.getPattern() + ")" + str(ssr2.getTotalSize() / len(ssr2.getPattern())) + "," + str(ssr2.getTotalSize()) + "," + str(ssr2.getStartLocation()) + "," + str(ssr2.getEndLocation()) + "," + ssr2.getLeft50() + "," + ssr2.getRight50() + '\n')
-				for k in range(2, len(organismList)):
-					childSSRs = organismList[k].getListOfSSRs()
-					for l in range(len(childSSRs)):
-						ssrC = childSSRs[l]
-						if ((ssr1.getPattern() == ssrC.getPattern() or ssr1.getPattern() == reverseComplement(ssrC.getPattern())) and (compareSeqs(ssr1.getLeft50(), ssrC.getLeft50()) and compareSeqs(ssr1.getRight50(), ssrC.getRight50()) or compareSeqs(ssr1.getLeft50(), reverseComplement(ssrC.getRight50())) and compareSeqs(ssr1.getRight50(), reverseComplement(ssrC.getLeft50())))):
-							outFile.write(organismList[k].getName() + "," + ssrC.getLabel() + "," + str(insertNum) + ",p" + str(len(ssrC.getPattern())) + ",(" + ssrC.getPattern() + ")" + str(ssrC.getTotalSize() / len(ssrC.getPattern())) + "," + str(ssrC.getTotalSize()) + "," + str(ssrC.getStartLocation()) + "," + str(ssrC.getEndLocation()) + "," + ssrC.getLeft50() + "," + ssrC.getRight50() + '\n')
-				insertNum += 1
-			if (ssr1.getPattern() == reverseComplement(ssr2.getPattern()) and ssr1.getRepeatNum() != ssr2.getRepeatNum() and compareSeqs(ssr1.getLeft50(), reverseComplement(ssr2.getRight50())) and compareSeqs(ssr1.getRight50(), reverseComplement(ssr2.getLeft50()))):
-				outFile.write("1," + ssr1.getLabel() + "," + str(insertNum) + ",p" + str(len(ssr1.getPattern())) + ",(" + ssr1.getPattern() + ")" + str(ssr1.getTotalSize() / len(ssr1.getPattern())) + "," + str(ssr1.getTotalSize()) + "," + str(ssr1.getStartLocation()) + "," + str(ssr1.getEndLocation()) + "," + ssr1.getLeft50() + "," + ssr1.getRight50() + '\n')
-				outFile.write("2," + ssr2.getLabel() + "," + str(insertNum) + ",p" + str(len(ssr2.getPattern())) + ",(" + ssr2.getPattern() + ")" + str(ssr2.getTotalSize() / len(ssr2.getPattern())) + "," + str(ssr2.getTotalSize()) + "," + str(ssr2.getStartLocation()) + "," + str(ssr2.getEndLocation()) + "," + ssr2.getLeft50() + "," + ssr2.getRight50() + '\n')
-				for k in range(2, len(organismList)):
-					childSSRs = organismList[k].getListOfSSRs()
-					for l in range(len(childSSRs)):
-						ssrC = childSSRs[l]
-						if ((ssr1.getPattern() == ssrC.getPattern() or ssr1.getPattern() == reverseComplement(ssrC.getPattern())) and (compareSeqs(ssr1.getLeft50(), ssrC.getLeft50()) and compareSeqs(ssr1.getRight50(), ssrC.getRight50()) or compareSeqs(ssr1.getLeft50(), reverseComplement(ssrC.getRight50())) and compareSeqs(ssr1.getRight50(), reverseComplement(ssrC.getLeft50())))):
-							outFile.write(organismList[k].getName() + "," + ssrC.getLabel() + "," + str(insertNum) + ",p" + str(len(ssrC.getPattern())) + ",(" + ssrC.getPattern() + ")" + str(ssrC.getTotalSize() / len(ssrC.getPattern())) + "," + str(ssrC.getTotalSize()) + "," + str(ssrC.getStartLocation()) + "," + str(ssrC.getEndLocation()) + "," + ssrC.getLeft50() + "," + ssrC.getRight50() + '\n')
-				insertNum += 1
-	outFile.close()
-	outFile2 = open("HybridTables.csv","w")
-	outFile2.write("SSR")
-	for i in range(len(organismList)):
-		outFile2.write("," + organismList[i].getName())
-	outFile2.write('\n')
-	ssrList1 = organismList[0].getListOfSSRs()
-	ssrList2 = organismList[1].getListOfSSRs()
-	for ssr1 in ssrList1:
-		for ssr2 in ssrList2:
-			if (ssr1.getPattern() == ssr2.getPattern() or ssr1.getPattern() == reverseComplement(ssr2.getPattern())) and ssr1.getRepeatNum() != ssr2.getRepeatNum() and (compareSeqs(ssr1.getLeft50(), ssr2.getLeft50()) and compareSeqs(ssr1.getRight50(), ssr2.getRight50()) or compareSeqs(ssr1.getLeft50(), reverseComplement(ssr2.getRight50())) and compareSeqs(ssr1.getRight50(), reverseComplement(ssr2.getLeft50()))):
 				outFile2.write("(" + ssr1.getPattern() + ")")
 				outFile2.write(str(ssr1.getTotalSize() / len(ssr1.getPattern())) + "/" + str(ssr2.getTotalSize() / len(ssr2.getPattern())))
 				outFile2.write(",A,B")
-				for i in range(2, len(organismList)):
-					childSSRs = organismList[i].getListOfSSRs()
+				for k in range(2, len(organismList)):
+					childSSRs = organismList[k].getListOfSSRs()
 					p1 = False
 					p2 = False
-					for ssrC in childSSRs:
+					for l in range(len(childSSRs)):
+						ssrC = childSSRs[l]
 						if (ssr1.getPattern() == ssrC.getPattern() or ssr1.getPattern() == reverseComplement(ssrC.getPattern())) and ssr1.getTotalSize() == ssrC.getTotalSize() and (compareSeqs(ssr1.getLeft50(), ssrC.getLeft50()) and compareSeqs(ssr1.getRight50(), ssrC.getRight50()) or compareSeqs(ssr1.getLeft50(), reverseComplement(ssrC.getRight50())) and compareSeqs(ssr1.getRight50(), reverseComplement(ssrC.getLeft50()))):
 							p1 = True
 						if (ssr2.getPattern() == ssrC.getPattern() or ssr2.getPattern() == reverseComplement(ssrC.getPattern())) and ssr2.getTotalSize() == ssrC.getTotalSize() and (compareSeqs(ssr2.getLeft50(), ssrC.getLeft50()) and compareSeqs(ssr2.getRight50(), ssrC.getRight50()) or compareSeqs(ssr2.getLeft50(), reverseComplement(ssrC.getRight50())) and compareSeqs(ssr2.getRight50(), reverseComplement(ssrC.getLeft50()))):
 							p2 = True
+						if ((ssr1.getPattern() == ssrC.getPattern() or ssr1.getPattern() == reverseComplement(ssrC.getPattern())) and (compareSeqs(ssr1.getLeft50(), ssrC.getLeft50()) and compareSeqs(ssr1.getRight50(), ssrC.getRight50()) or compareSeqs(ssr1.getLeft50(), reverseComplement(ssrC.getRight50())) and compareSeqs(ssr1.getRight50(), reverseComplement(ssrC.getLeft50())))):
+							outFile.write(organismList[k].getName() + "," + ssrC.getLabel() + "," + str(insertNum) + ",p" + str(len(ssrC.getPattern())) + ",(" + ssrC.getPattern() + ")" + str(ssrC.getTotalSize() / len(ssrC.getPattern())) + "," + str(ssrC.getTotalSize()) + "," + str(ssrC.getStartLocation()) + "," + str(ssrC.getEndLocation()) + "," + ssrC.getLeft50() + "," + ssrC.getRight50() + '\n')
 					if p1 and p2:
 						outFile2.write(",H")
 					elif p1:
@@ -304,5 +285,35 @@ if (len(organismList) > 2):
 						outFile2.write(",B")
 					else:
 						outFile2.write(",X")
+				insertNum += 1
 				outFile2.write("\n")
+			if (ssr1.getPattern() == reverseComplement(ssr2.getPattern()) and ssr1.getRepeatNum() != ssr2.getRepeatNum() and compareSeqs(ssr1.getLeft50(), reverseComplement(ssr2.getRight50())) and compareSeqs(ssr1.getRight50(), reverseComplement(ssr2.getLeft50()))):
+				outFile.write("1," + ssr1.getLabel() + "," + str(insertNum) + ",p" + str(len(ssr1.getPattern())) + ",(" + ssr1.getPattern() + ")" + str(ssr1.getTotalSize() / len(ssr1.getPattern())) + "," + str(ssr1.getTotalSize()) + "," + str(ssr1.getStartLocation()) + "," + str(ssr1.getEndLocation()) + "," + ssr1.getLeft50() + "," + ssr1.getRight50() + '\n')
+				outFile.write("2," + ssr2.getLabel() + "," + str(insertNum) + ",p" + str(len(ssr2.getPattern())) + ",(" + ssr2.getPattern() + ")" + str(ssr2.getTotalSize() / len(ssr2.getPattern())) + "," + str(ssr2.getTotalSize()) + "," + str(ssr2.getStartLocation()) + "," + str(ssr2.getEndLocation()) + "," + ssr2.getLeft50() + "," + ssr2.getRight50() + '\n')
+				outFile2.write("(" + ssr1.getPattern() + ")")
+				outFile2.write(str(ssr1.getTotalSize() / len(ssr1.getPattern())) + "/" + str(ssr2.getTotalSize() / len(ssr2.getPattern())))
+				outFile2.write(",A,B")
+				for k in range(2, len(organismList)):
+					childSSRs = organismList[k].getListOfSSRs()
+					p1 = False
+					p2 = False
+					for l in range(len(childSSRs)):
+						ssrC = childSSRs[l]
+						if (ssr1.getPattern() == ssrC.getPattern() or ssr1.getPattern() == reverseComplement(ssrC.getPattern())) and ssr1.getTotalSize() == ssrC.getTotalSize() and (compareSeqs(ssr1.getLeft50(), ssrC.getLeft50()) and compareSeqs(ssr1.getRight50(), ssrC.getRight50()) or compareSeqs(ssr1.getLeft50(), reverseComplement(ssrC.getRight50())) and compareSeqs(ssr1.getRight50(), reverseComplement(ssrC.getLeft50()))):
+							p1 = True
+						if (ssr2.getPattern() == ssrC.getPattern() or ssr2.getPattern() == reverseComplement(ssrC.getPattern())) and ssr2.getTotalSize() == ssrC.getTotalSize() and (compareSeqs(ssr2.getLeft50(), ssrC.getLeft50()) and compareSeqs(ssr2.getRight50(), ssrC.getRight50()) or compareSeqs(ssr2.getLeft50(), reverseComplement(ssrC.getRight50())) and compareSeqs(ssr2.getRight50(), reverseComplement(ssrC.getLeft50()))):
+							p2 = True
+						if (ssr1.getPattern() == ssrC.getPattern() and compareSeqs(ssr1.getLeft50(), ssrC.getLeft50()) and compareSeqs(ssr1.getRight50(), ssrC.getRight50())):
+							outFile.write(organismList[k].getName() + "," + ssrC.getLabel() + "," + str(insertNum) + ",p" + str(len(ssrC.getPattern())) + ",(" + ssrC.getPattern() + ")" + str(ssrC.getTotalSize() / len(ssrC.getPattern())) + "," + str(ssrC.getTotalSize()) + "," + str(ssrC.getStartLocation()) + "," + str(ssrC.getEndLocation()) + "," + ssrC.getLeft50() + "," + ssrC.getRight50() + '\n')
+					if p1 and p2:
+						outFile2.write(",H")
+					elif p1:
+						outFile2.write(",A")
+					elif p2:
+						outFile2.write(",B")
+					else:
+						outFile2.write(",X")
+				insertNum += 1
+				outFile2.write("\n")
+	outFile.close()
 	outFile2.close()
